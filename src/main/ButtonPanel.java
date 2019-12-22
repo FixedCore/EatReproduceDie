@@ -5,21 +5,29 @@ import java.awt.event.ActionListener;
 
 public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
     private AbstractWorldMap field;
+    JComboBox judgeAnimal;
 
 
     public ButtonPanel(AbstractWorldMap field){
         this.field = field;
-        //BUTTON CONFIGURATION
+        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+    //BUTTON CONFIGURATION
         JButton bendTime = new JButton("Bend time");
         JButton getMeanStatistics = new JButton("Get mean statistics");
         JButton createNewGrasfield = new JButton("Crete new grassfield");
-        //JButton judgeAnimal; // todo add a list
+        this.judgeAnimal = new JComboBox(); // todo add a list
+
+
+
 
         bendTime.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 field.bendTime();
+                turnOnJudgment();
             }
+
+
         });
         createNewGrasfield.addActionListener(new ActionListener() {//todo
             @Override
@@ -32,7 +40,7 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
             }
         });
 
-        //LAYOUT CONFIGURATION
+    //LAYOUT CONFIGURATION
         setLayout(new GridBagLayout());
         setVisible(true);
         GridBagConstraints gc = new GridBagConstraints();
@@ -52,13 +60,15 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
         gc.gridy = 0;
         add(getMeanStatistics,gc);
 
-
-
-
-
-
+        gc.gridx = 3;
+        add(judgeAnimal,gc);
+        judgeAnimal.setVisible(false);
     }
 
-
+    public void turnOnJudgment(){
+        this.judgeAnimal.setVisible(true);
+        for(Animal animal : field.getListOfAnimals()) judgeAnimal.addItem(animal);
+        for(Animal animal : field.getTheDead()) judgeAnimal.addItem(animal);
+    }
 
 }
