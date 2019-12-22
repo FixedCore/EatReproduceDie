@@ -3,18 +3,19 @@ import com.google.common.collect.Multimap;
 
 import java.util.*;
 
-public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
+public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
+    boolean isRunning = true;
+    private MainFrame Layout = new MainFrame(this);
     private List<Animal> listOfAnimals = new ArrayList<>();
     private List<Animal> theDead =new ArrayList<>();
     private int lifespan = 0;
     private Multimap<Vector2d, AbstractWorldObject> map =  ArrayListMultimap.create();
-    MapVisualizer mapVisualizer;
+    private MapVisualizer mapVisualizer;
     private int dayCounter = 0;
     protected Boundary boundary;
     private int parousiaDay;
     private int grassNumber;
     private int startEnergy;
-    private MainFrame Layout = new MainFrame();
     private StatisticalData statisticalData;
 
     public AbstractWorldMap(int grassNumber, int parousiaDay, Boundary boundary,
@@ -31,7 +32,19 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
 
     }
 
+    public void bendTime(){
+        isRunning = !isRunning;
+    }
 
+
+    public void theBeginOfTime() throws InterruptedException {
+        for(int i = 0; i<parousiaDay; i++) {
+            dayCounter++;
+            if (isRunning) day();
+            else while (!isRunning) Thread.sleep(200);
+            Thread.sleep(1000);
+        }
+    }
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
         if(oldPosition != null){
@@ -55,14 +68,9 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         }
 
     }
-    void theBeginOfTime(){
-        for(int i = 0; i<parousiaDay; i++){
-            dayCounter++;
-            day();
-        }
-    }
 
-    private void day(){
+
+    void day(){
         movementTime();
         eatingTime();
         breedingTime();
@@ -71,6 +79,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         String string = this.toString();
         try {
             Layout.changeText(string);
+            Layout.actualiseStatistics(statisticalData.toString());
         } catch (Exception ignored){
 
         }

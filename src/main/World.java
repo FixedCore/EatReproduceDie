@@ -1,7 +1,6 @@
 public class World {
     public static void main(String[] args){
         try {
-            MainFrame gui = new MainFrame();
             //WORLD CONST
                 //MAP
             Vector2d upperRight = new Vector2d(30,30);
@@ -15,12 +14,13 @@ public class World {
             int parousiaDay =600;
                 //CREATION
             Boundary boundary = new Boundary(upperRight,jungleLowerLeft,jungleUpperRight);
-            GrassField grassField = new GrassField(grassNumber, parousiaDay, boundary,
-            startAnimalNumber, startEnegry);
+            AbstractWorldMap grassField = new AbstractWorldMap(grassNumber, parousiaDay, boundary,
+                    startAnimalNumber, startEnegry) {
+            };
             grassField.theBeginOfTime();
             //MainFrame mainFrame = new MainFrame();
             //System.out.println(grassField.toString());/
-        } catch(IllegalArgumentException | IllegalStateException ex) {
+        } catch(IllegalArgumentException | IllegalStateException | InterruptedException ex) {
             System.out.println("There is an interesting message for you.");
             System.out.println(ex);
         }

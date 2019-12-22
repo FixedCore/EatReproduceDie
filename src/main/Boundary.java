@@ -1,4 +1,4 @@
-public class Boundary {
+public class Boundary {//KEEPS THE BOUNDARY OF THE A GRASS FIELD.
     Vector2d upperRight;
     Vector2d jungleLowerLeft;
     Vector2d jungleUpperRight;

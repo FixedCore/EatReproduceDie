@@ -64,6 +64,11 @@ class StatisticalData {
             countOffspringInnerFunction(offspring, counted);
         }
     }
+    public String toString(){
+        return String.format("Total_animal:%d " ,animalNumber).concat(String.format("Total_grass:%d ", grassNumber)).
+                concat(String.format("Dominating_gene:%s ", dominatingGene())).concat(String.format("Mean_energy:%d ", meanEnergy)).
+                concat(String.format("Mean_lifespan:%d ", meanLifespan)).concat(String.format("Mean_childern_number:%d ",meanChildrenNumber));
+    }
 
     public void exportStatisticalData(){
     try {
@@ -72,6 +77,7 @@ class StatisticalData {
         statisticalData.createNewFile();
         PrintWriter pw = new PrintWriter(statisticalData);
         //todo calculate means
+
         pw.println(String.format(""));
         pw.close();
         /*PrintStream statisticalData = System.out;
