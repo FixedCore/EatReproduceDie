@@ -14,10 +14,10 @@ public class World {
             int parousiaDay =600;
                 //CREATION
             Boundary boundary = new Boundary(upperRight,jungleLowerLeft,jungleUpperRight);
-            AbstractWorldMap grassField = new AbstractWorldMap(grassNumber, parousiaDay, boundary,
+            Multiversum grassField = new Multiversum(grassNumber, parousiaDay, boundary,
                     startAnimalNumber, startEnegry) {
             };
-            grassField.theBeginOfTime();
+            grassField.createNewWorld();
             //MainFrame mainFrame = new MainFrame();
             //System.out.println(grassField.toString());/
         } catch(IllegalArgumentException | IllegalStateException | InterruptedException ex) {

@@ -13,22 +13,20 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     private MapVisualizer mapVisualizer;
     private int dayCounter = 0;
     protected Boundary boundary;
-    private int parousiaDay;
     private int grassNumber;
-    private int startEnergy;
     private StatisticalData statisticalData;
+    public Multiversum multiversum;
 
-    public AbstractWorldMap(int grassNumber, int parousiaDay, Boundary boundary,
-                            int startAnimalNumber, int startEnergy){
-        this.parousiaDay = parousiaDay;
+    public AbstractWorldMap(int grassNumber, Boundary boundary, Multiversum multiversum){
         this.grassNumber = grassNumber;
-        this.mapVisualizer = new MapVisualizer(this);
-        this.startEnergy = startEnergy;
         this.boundary = boundary;
+        this.multiversum = multiversum;
+        //this.mapVisualizer = new MapVisualizer(this);
         mapVisualizer = new MapVisualizer(this);
         statisticalData = new StatisticalData(this);
+
         placeGrass();
-        initialAnimalPlacement(startAnimalNumber);
+        initialAnimalPlacement(multiversum.getStartAnimalNumber());
 
     }
 
@@ -36,9 +34,8 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         isRunning = !isRunning;
     }
 
-
     public void theBeginOfTime() throws InterruptedException {
-        for(int i = 0; i<parousiaDay; i++) {
+        for(int i = 0; i<multiversum.getParousiaDay(); i++) {
             dayCounter++;
             if (isRunning) day();
             else while (!isRunning) Thread.sleep(200);
@@ -106,7 +103,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     void initialAnimalPlacement(int startAnimalNumber) {
         for(int i = 0; i < startAnimalNumber; i++) {
             Vector2d tmp = boundary.randomPosition();
-            Animal animal = new Animal(tmp, startEnergy, null, null);
+            Animal animal = new Animal(tmp, multiversum.getStartEnergy(), null, null);
             place(animal);
         }
     }
@@ -248,9 +245,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         return listOfAnimals;
     }
 
-    public int getStartEnergry(){
-        return startEnergy;
-    }
 
     public List<Animal> getTheDead() {
         return theDead;

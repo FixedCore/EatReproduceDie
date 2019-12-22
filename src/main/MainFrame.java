@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame { //MAIN GUI
     private AbstractWorldMap field;
     private JLabel mapDrawer = new JLabel();
     private DetalisPanel detalisPanel = new DetalisPanel();

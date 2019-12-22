@@ -1,3 +1,4 @@
+/*
 public class GrassField extends AbstractWorldMap {
 
 
@@ -9,3 +10,4 @@ public class GrassField extends AbstractWorldMap {
 
 
 }
+*/

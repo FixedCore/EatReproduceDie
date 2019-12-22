@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ButtonPanel extends JButton {
+public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
     private AbstractWorldMap field;
 
 
@@ -19,6 +19,16 @@ public class ButtonPanel extends JButton {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 field.bendTime();
+            }
+        });
+        createNewGrasfield.addActionListener(new ActionListener() {//todo
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    field.multiversum.createNewWorld();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
