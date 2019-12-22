@@ -27,7 +27,7 @@ public class Boundary {//KEEPS THE BOUNDARY OF THE A GRASS FIELD.
         return tmp;
     }
     public boolean isInBoundary(Vector2d position){
-        return  0 < position.getX() && position.getX() < upperRight.getX() && 0 < position.getY() && position.getY() < upperRight.getY();
+        return  0 <= position.getX() && position.getX() <= upperRight.getX() && 0 <= position.getY() && position.getY() <= upperRight.getY();
     }
 
     public Vector2d getUpperRight() {

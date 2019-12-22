@@ -45,6 +45,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
         if(oldPosition != null){
+            newPosition = boundary.keepInsideBoundaries(newPosition);
             map.remove(oldPosition, animal);
             map.put(newPosition, animal);
         }
@@ -130,9 +131,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         }
     }
 
-    private Optional<Grass> getGrass(Vector2d tmp) {
-        return map.get(tmp).stream().filter(object -> object instanceof Grass).map(Grass.class::cast).findAny();
-    }
+
 
     private void movementTime() {
         for (Animal animal : listOfAnimals) {
@@ -144,43 +143,46 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         for(Vector2d position : occupiedPositions){
             List<Animal> whoEats = new ArrayList<>();
             Collection<AbstractWorldObject> hereAre = map.get(position);
-            Grass grass = null;
-            //STREAM TO ARRAY??
-            /*whoEats = hereAre.stream().filter(object -> object instanceof Animal).filter(animal -> ((Animal) animal).sameEnergy(theStrongest(animal.getPosition())))
-                    .map(Animal.class::cast).toArray();*/
-            for(AbstractWorldObject object : hereAre){
-                if(object instanceof Animal) {
-                    if (((Animal) object).sameEnergy(theStrongest(object.getPosition())))
-                        whoEats.add((Animal) object);
+            Grass grassHere = null;
+            if(hereAre.size()>1){
+                for(AbstractWorldObject object : hereAre){
+                    if(object instanceof Animal) {
+                        if (((Animal) object).sameEnergy(theStrongest(object.getPosition())))
+                            whoEats.add((Animal) object);
+                    }
+                    else if (object instanceof Grass) grassHere = (Grass) object;
                 }
-                else if (object instanceof Grass) grass = (Grass) object;
-
+                if(grassHere == null) return;
+                int energy = grassHere.getEnergy();
+                if(!whoEats.isEmpty()){
+                    grassNumber--;
+                    energy /= whoEats.size();
+                    int finalEnergy = energy; //JAVA makes me to do so ;(
+                    whoEats.forEach(animal -> animal.eat(finalEnergy));
+                    //AbstractWorldObject grass = hereAre.stream().filter(object -> object instanceof Grass).findAny().get();
+                    this.map.remove(position, grassHere);
+                    //map.remove(grass.getPosition(), grass);
+                }
+                //Functional code
+                //STREAM TO ARRAY??
+                /*whoEats = hereAre.stream().filter(object -> object instanceof Animal).filter(animal -> ((Animal) animal).sameEnergy(theStrongest(animal.getPosition())))
+                        .map(Animal.class::cast).toArray();*/
+                    /*             Optional<Grass> tmp = hereAre.stream().
+                        filter(object -> object instanceof Grass).map(Grass.class::cast).findAny();*/
             }
-/*             Optional<Grass> tmp = hereAre.stream().
-                    filter(object -> object instanceof Grass).map(Grass.class::cast).findAny();*/
-            if(grass == null) return;
-            int energy = grass.getEnergy();
-            if(!whoEats.isEmpty()){
-                grassNumber--;
-                energy /= whoEats.size();
-                int finalEnergy = energy; //JAVA makes me to do so ;(
-                whoEats.forEach(animal -> animal.eat(finalEnergy));
-                //AbstractWorldObject grass = hereAre.stream().filter(object -> object instanceof Grass).findAny().get();
-                map.remove(grass.getPosition(), grass);
-            }
-
         }
 
     }
 
 
-
+//BREEDING
     private void breedingTime() {
         HashMap<Vector2d, Animal> whoBreeds = new HashMap<>();
         for(Animal animal: listOfAnimals)
             if(isPartnerHere(animal.getPosition()) && animal.sameEnergy(theStrongest(animal.getPosition())))
                 whoBreeds.put(animal.getPosition(), animal);
-        whoBreeds.forEach((position, animal) -> animal.mate(findMatingPartner(position)));
+        if(!whoBreeds.isEmpty())
+            whoBreeds.forEach((position, animal) -> animal.mate(findMatingPartner(position)));
     }
     private Animal findMatingPartner(Vector2d position) {
         Collection<AbstractWorldObject> hereAre = map.get(position);
@@ -200,7 +202,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
                  ((Animal) o).getEnergy()
     ); //WHY it works?
 
-
+//USEFUL METHODS
     public Animal theStrongest(Vector2d position){
         Collection<AbstractWorldObject> positionList = map.get(position);
         Animal strongest = (Animal) positionList.stream().filter(object -> object instanceof Animal).findAny().get();//Can I do I better? 2todo
@@ -213,12 +215,15 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         return  strongest;
 
     }
+    private Optional<Grass> getGrass(Vector2d tmp) {
+        return map.get(tmp).stream().filter(object -> object instanceof Grass).map(Grass.class::cast).findAny();
+    }
 
     public Object objectAt(Vector2d position) {
         return map.get(position);
     }
 
-    @Override
+
     public boolean canMoveTo(Vector2d position) {
         return true;
 
@@ -232,8 +237,8 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         return mapVisualizer.draw(new Vector2d(0,0), boundary.getUpperRight());
     }
 
-
-    public int size(){
+//GETTERS
+    public int getSize(){
         return map.size();
     }
 
