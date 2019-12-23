@@ -25,14 +25,11 @@ public class Animal extends AbstractWorldObject {
 
 
     void mate(Animal matingPartner){
-        if(this == matingPartner) return; //todo brzydki kod
+        if(this == matingPartner) return;
         if(this.getAge() < 5 && matingPartner.getAge() < 5) return;
-        //if(this.getEnergy()< || matingPartner.getEnergy()< ) //todo stat energy
-        //childrenNumber++;
-        int childEnergy = (int) ((this.getEnergy() + matingPartner.getEnergy())/4);//why cast to int?? todo
+        int childEnergy = (this.getEnergy() + matingPartner.getEnergy())/4;
         Animal child = new Animal(this.position, childEnergy, this, matingPartner, map);
         map.place(child);
-        //child.positionChanged(null, child.getPosition());
         this.afterMatingExhaustion(); this.rememberOffspring(child);
         matingPartner.afterMatingExhaustion(); matingPartner.rememberOffspring(child);
     }
@@ -45,7 +42,7 @@ public class Animal extends AbstractWorldObject {
 
 
     public String toString(){
-        int energy = (int) this.energy;
+        int energy = this.energy;
         return String.valueOf(energy);
     }
 
@@ -60,7 +57,7 @@ public class Animal extends AbstractWorldObject {
     }
 
     void randomRotate(){
-        this.dir = MapDirection.rotate(this.dir, MapDirection.values()[genome.getRandomAllele()]);//dzwnie losuje //todo
+        this.dir = MapDirection.rotate(this.dir, MapDirection.values()[genome.getRandomAllele()]);
     }
 
     public void eat(int energy){
@@ -128,8 +125,8 @@ public class Animal extends AbstractWorldObject {
     }
 
     public int getDeathDay(){
-        if(age+birthDate == map.getDayCounter()) return -1;
-        return age+birthDate;
+        if(age+birthDate+1 < map.getDayCounter()) return age+birthDate;
+        return -1;
     }
 
     public int getCurrentYear() {

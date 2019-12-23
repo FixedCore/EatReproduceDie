@@ -10,7 +10,7 @@ public class World {
         //CREATURES
             int startAnimalNumber = 30;
             int startEnegry =10;
-            int grassNumber = 26; //Best works with even numbers
+            int grassNumber = 1;
                 //BASIC PARAMETERS
             int parousiaDay =20000;
         //CREATION

@@ -79,10 +79,6 @@ public class TotalStatisticalData {
             PrintWriter pw = new PrintWriter(statisticalDataFile);
             pw.print(calculateMeans());
             pw.close();
-        /*PrintStream statisticalData = System.out;
-        PrintStream fileOut = new PrintStream("./out.txt");
-        System.setOut(fileOut);
-        statisticalData.println("staty");*/
         } catch (IOException ex){
             ex.printStackTrace();
         }

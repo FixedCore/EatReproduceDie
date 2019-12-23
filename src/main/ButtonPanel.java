@@ -28,7 +28,7 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
                 turnOnJudgment();
             }
         });
-        createNewGrasfield.addActionListener(new ActionListener() {//todo
+        createNewGrasfield.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {

@@ -4,7 +4,7 @@ import com.google.common.collect.Multimap;
 import java.util.*;
 
 public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
-    boolean isRunning = true;
+    private boolean isRunning = true;
     private MainFrame Layout = new MainFrame(this);
     private List<Animal> listOfAnimals = new ArrayList<>();
     private List<Animal> theDead =new ArrayList<>();
@@ -12,16 +12,15 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     private Multimap<Vector2d, AbstractWorldObject> map =  ArrayListMultimap.create();
     private MapVisualizer mapVisualizer;
     private int dayCounter = 0;
-    protected Boundary boundary;
+    Boundary boundary;
     private int grassNumber;
     private StatisticalData statisticalData;
-    public Multiversum multiversum;
+    Multiversum multiversum;
 
     public AbstractWorldMap(int grassNumber, Boundary boundary, Multiversum multiversum){
         this.grassNumber = grassNumber;
         this.boundary = boundary;
         this.multiversum = multiversum;
-        //this.mapVisualizer = new MapVisualizer(this);
         mapVisualizer = new MapVisualizer(map);
         statisticalData = new StatisticalData(this);
 
@@ -72,10 +71,13 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
 
        if(listOfAnimals.isEmpty()) throw new IllegalStateException("All animals became extinct before your arrival Lord.");
     }
-    void placeGrass(){//JUNGLE AND SAVANNA TODO CODE CLEAN UP!
-        //IN SAVANNA
-        for(int i = 0; i < multiversum.getDailyGrassNumber()/2; i++) {
-            Vector2d tmp = boundary.randomPositionSavanna();
+    private void placeGrass(){//JUNGLE AND SAVANNA
+        for(int i = 0; i < 2*multiversum.getDailyGrassNumber(); i++) {
+            Vector2d tmp =null;
+            if(i%2 == 0)  //IN SAVANNA OR IN JUNGLE
+                tmp = boundary.randomPositionSavanna();
+            else
+                tmp = boundary.randomPositionJungle();
             Optional<Grass> grassOnPosition = getGrassFromPosition(tmp);
             if(!isAnimalHere(tmp)) {
                 if (grassOnPosition.isEmpty()) {
@@ -85,19 +87,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
                 } else grassOnPosition.get().increaseEnergy(6);
             }
         }
-        //IN JUNGLE
-        for(int i = 0; i < multiversum.getDailyGrassNumber()/2; i++){
-            Vector2d tmp = boundary.randomPositionJungle();
-            Optional<Grass> grassOnPosition = getGrassFromPosition(tmp);
-            if(!isAnimalHere(tmp)){
-                if(grassOnPosition.isEmpty()) {
-                    Grass grass = new Grass(tmp);
-                    map.put(tmp, grass);
-                    grassNumber++;
-                }
-                else grassOnPosition.get().increaseEnergy(6);
-            }
-        }
     }
 
     private void movementTime() {
@@ -105,7 +94,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
             animal.move();
         }
     }
-    private void eatingTime(){ //todo check if grass is always eaten.
+    private void eatingTime(){
         Set<Vector2d> occupiedPositions = map.keySet();
         for(Vector2d position : occupiedPositions){
             List<Animal> whoEats = new ArrayList<>();
@@ -128,7 +117,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
                     whoEats.forEach(animal -> animal.eat(finalEnergy));
                     //AbstractWorldObject grass = hereAre.stream().filter(object -> object instanceof Grass).findAny().get();
                     this.map.remove(position, grassHere);
-                    //map.remove(grass.getPosition(), grass);
                 }
                 //Functional code
                 //STREAM TO ARRAY??
@@ -193,7 +181,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
 //OTHER METHODS
     public Animal theStrongest(Vector2d position){
         Collection<AbstractWorldObject> positionList = map.get(position);
-        Animal strongest = (Animal) positionList.stream().filter(object -> object instanceof Animal).findAny().get();//Can I do I better? 2todo
+        Animal strongest = (Animal) positionList.stream().filter(object -> object instanceof Animal).findAny().get();
         for(AbstractWorldObject worldObject : positionList) {
             if(worldObject instanceof  Animal){
                 if(((Animal) worldObject).getEnergy() >  strongest.getEnergy())
