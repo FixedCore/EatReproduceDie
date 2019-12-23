@@ -1,11 +1,11 @@
-public class Multiversum {
+public class Multiversum extends Thread {
     final int startEnergy;
     final int dailyGrassNumber;
     final int parousiaDay;
     final int startAnimalNumber;
     Boundary boundary;
 
-    public Multiversum(int grassNumber, int parousiaDay, Boundary boundary,
+    public Multiversum (int grassNumber, int parousiaDay, Boundary boundary,
                        int startAnimalNumber, int startEnergy){
         this.startEnergy = startEnergy;
         this.dailyGrassNumber =grassNumber;
@@ -15,10 +15,19 @@ public class Multiversum {
     }
 
 
-    public AbstractWorldMap createNewWorld() throws InterruptedException {
+    void createNewWorld() throws InterruptedException {
         AbstractWorldMap world = new AbstractWorldMap(dailyGrassNumber, boundary, this);
-        world.theBeginOfTime();
-        return world;
+        Thread thread = new Thread(){
+          public void run(){
+              try {
+                  world.theBeginOfTime();
+              } catch (InterruptedException e) {
+                  e.printStackTrace();
+              }
+          }
+        };
+        thread.start();
+
     }
 
     public int getDailyGrassNumber() {
