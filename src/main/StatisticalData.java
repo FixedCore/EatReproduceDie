@@ -1,9 +1,6 @@
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +10,9 @@ class StatisticalData {
     private int meanEnergy;
     private int meanLifespan = 0; //todo make sure 0 only at start
     private int meanChildrenNumber = 0;
-    private AbstractWorldMap map;
+    private  String dominatingGene;
+    AbstractWorldMap map;
+    TotalStatisticalData totalData = new TotalStatisticalData(this);
 
     StatisticalData(AbstractWorldMap map){
         this.map = map;
@@ -26,6 +25,8 @@ class StatisticalData {
         countAnimals();
         meanEnergyAndMeanChildren();
         meanLifespan();
+        this.dominatingGene = dominatingGene();
+        totalData.actualiseTotalData();
 
     }
 
@@ -74,7 +75,7 @@ class StatisticalData {
     public String toString(){
         actualiseStatistics();
         return String.format("Total_animal:%d " ,animalNumber).concat(String.format("Total_grass:%d ", grassNumber)).
-                concat(String.format("Dominating_gene:%s ", dominatingGene())).concat(String.format("Mean_energy:%d ", meanEnergy)).
+                concat(String.format("Dominating_gene:%s ", dominatingGene)).concat(String.format("Mean_energy:%d ", meanEnergy)).
                 concat(String.format("Mean_lifespan:%d ", meanLifespan)).concat(String.format("Mean_childern_number:%d ",meanChildrenNumber));
     }
 //ADVANCED STATISTICAL DATA
@@ -89,30 +90,30 @@ class StatisticalData {
     }
 
 
-    int countAllAnimals(){
-        int a =1;
-        return a;
+//GETTERS
+
+
+    public String getDominatingGene() {
+        return dominatingGene;
     }
 
-
-    public void exportStatisticalData(){
-    try {
-        File statisticalData = new File(String.format("StatisticalDataAfter%d", map.getDayCounter()));
-        if(statisticalData.exists()) return;
-        statisticalData.createNewFile();
-        PrintWriter pw = new PrintWriter(statisticalData);
-        //todo calculate means
-
-
-        pw.close();
-        /*PrintStream statisticalData = System.out;
-        PrintStream fileOut = new PrintStream("./out.txt");
-        System.setOut(fileOut);
-        statisticalData.println("staty");*/
-    } catch (IOException ex){
-        ex.printStackTrace();
-    }
+    public int getGrassNumber() {
+        return grassNumber;
     }
 
+    public int getMeanEnergy() {
+        return meanEnergy;
+    }
 
+    public int getMeanLifespan() {
+        return meanLifespan;
+    }
+
+    public int getMeanChildrenNumber() {
+        return meanChildrenNumber;
+    }
+
+    public int getAnimalNumber() {
+        return animalNumber;
+    }
 }

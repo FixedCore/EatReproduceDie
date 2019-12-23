@@ -59,6 +59,12 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
             }
         });
 
+        getMeanStatistics.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                field.getStatisticalData().totalData.exportStatisticalData();
+            }
+        });
 
     //LAYOUT CONFIGURATION
         setLayout(new GridBagLayout());
