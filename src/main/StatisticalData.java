@@ -1,3 +1,6 @@
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -75,6 +78,17 @@ class StatisticalData {
                 concat(String.format("Mean_lifespan:%d ", meanLifespan)).concat(String.format("Mean_childern_number:%d ",meanChildrenNumber));
     }
 //ADVANCED STATISTICAL DATA
+    public String showAllDominatingGenomes(){
+        Multimap<Vector2d, Animal> dominatorsOccupy =  ArrayListMultimap.create();
+        for (Animal animal : map.getListOfAnimals()) {
+            if(animal.getGenome().toString().equals(dominatingGene()))
+                dominatorsOccupy.put(animal.getPosition(),animal);
+        }
+        MapVisualizer visualizer = new MapVisualizer(dominatorsOccupy);
+        return visualizer.draw(new Vector2d(0,0), map.boundary.getUpperRight());
+    }
+
+
     int countAllAnimals(){
         int a =1;
         return a;

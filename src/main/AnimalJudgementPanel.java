@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AnimalJudgementPanel extends JFrame {
+public class AnimalJudgementPanel extends JFrame { //SHOWS FRAME FOR ANIMAL JUDGEMENT
     JLabel aniamalGenome = new JLabel();
     JLabel animalDetails = new JLabel();
     JTextField days = new JTextField();
@@ -12,11 +12,13 @@ public class AnimalJudgementPanel extends JFrame {
 
     AnimalJudgementPanel(Animal animal){
         this.animal = animal;
+    //BASIC INFORMATION SETUP
         String tmp = animal.getDeathDay() > 0 ?  "Still bothered" : String.valueOf(animal.getDeathDay());
         this.aniamalGenome.setText("Genome: ".concat(animal.getGenome().toString()).
                 concat(" Eternal happy since: ").concat(tmp));
         days.setText("Judge till day: ");
 
+    //BUTTON SETUP
         chceckHistory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

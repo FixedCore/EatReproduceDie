@@ -10,7 +10,7 @@ public class MainFrame extends JFrame { //MAIN GUI
 
     public MainFrame(AbstractWorldMap field) {
         this.field = field;
-        this.buttonPanel = new ButtonPanel(field);
+        this.buttonPanel = new ButtonPanel(field, this);
 
         //SET LAYOUT
         Font font = new Font(Font.MONOSPACED,Font.PLAIN ,12);

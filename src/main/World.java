@@ -7,9 +7,9 @@ public class World {
             Vector2d jungleLowerLeft = new Vector2d(10,10);
             Vector2d jungleUpperRight = new Vector2d(20,20);
                 //CREATURES
-            int startAnimalNumber = 10;
+            int startAnimalNumber = 34;
             int startEnegry =100;
-            int grassNumber = 2; //Best works with even numbers
+            int grassNumber = 60; //Best works with even numbers
                 //BASIC PARAMETERS
             int parousiaDay =20000;
                 //CREATION

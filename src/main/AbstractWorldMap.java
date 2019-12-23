@@ -22,7 +22,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         this.boundary = boundary;
         this.multiversum = multiversum;
         //this.mapVisualizer = new MapVisualizer(this);
-        mapVisualizer = new MapVisualizer(this);
+        mapVisualizer = new MapVisualizer(map);
         statisticalData = new StatisticalData(this);
 
         placeGrass();
@@ -53,7 +53,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         } catch (Exception ignored){
 
         }
-        //System.out.println(this.toString());
     }
 
     private void decayCorpses() {
@@ -245,6 +244,12 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     }
 
 //GETTERS
+
+
+    public StatisticalData getStatisticalData() {
+        return statisticalData;
+    }
+
     public int getSize(){
         return map.size();
     }

@@ -1,3 +1,5 @@
+import com.google.common.collect.Multimap;
+
 /**
                     * The map visualizer converts the {@link IWorldMap} map into a string
          * representation.
@@ -8,13 +10,13 @@
         private static final String EMPTY_CELL = "___";
         private static final String FRAME_SEGMENT = "—";
         private static final String CELL_SEGMENT = "|";
-        private IWorldMap map;
+        private Multimap map;
 
         /**
          * Initializes the MapVisualizer with an instance of map to visualize.
          * @param map
          */
-        public MapVisualizer(IWorldMap map) {
+        public MapVisualizer(Multimap map) {
             this.map = map;
         }
 
@@ -69,8 +71,8 @@
 
         private String drawObject(Vector2d currentPosition) {
             String result = null;
-            if (this.map.isOccupied(currentPosition)) {
-                Object object = this.map.objectAt(currentPosition);
+            if (this.map.containsKey(currentPosition)) {
+                Object object = this.map.get(currentPosition);
                 if (object != null) {
                     result = object.toString();
                 } else {
@@ -82,6 +84,8 @@
             result= result.replace("]", "" );
             result= result.replace("[", "" );
             if (result.isEmpty()) result = EMPTY_CELL;
+            while(result.length() < 3)  result = " ".concat(result);
+            if(result.length() > 5)  result = " # ";
             return result;
         }
     }
