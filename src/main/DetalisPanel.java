@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DetalisPanel extends JPanel {//DISPLAY DAILY STATISTICS ABOUT WORLD ON MAIN FRAME
-    JLabel dailyStatistics = new JLabel();
+    private JLabel dailyStatistics = new JLabel();
     DetalisPanel(){
         /*Dimension size = getPreferredSize();
         size.height = 250;

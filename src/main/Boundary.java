@@ -12,6 +12,7 @@ public class Boundary {//KEEPS THE BOUNDARY OF THE A GRASS FIELD.
         return Vector2d.random(jungleLowerLeft, jungleUpperRight);
     }
     public Vector2d randomPositionSavanna(){
+
         return Vector2d.random(new Vector2d(0,0), upperRight); //todo
     }
     public Vector2d randomPosition(){

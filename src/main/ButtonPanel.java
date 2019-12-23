@@ -8,17 +8,15 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
     JComboBox judgeAnimal;
 
 
-    public ButtonPanel(AbstractWorldMap field){
+    ButtonPanel(AbstractWorldMap field){
         this.field = field;
         String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
     //BUTTON CONFIGURATION
         JButton bendTime = new JButton("Bend time");
         JButton getMeanStatistics = new JButton("Get mean statistics");
         JButton createNewGrasfield = new JButton("Crete new grassfield");
+        JButton getInformation = new JButton("Judge animal");
         this.judgeAnimal = new JComboBox(); // todo add a list
-
-
-
 
         bendTime.addActionListener(new ActionListener() {
             @Override
@@ -26,8 +24,6 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
                 field.bendTime();
                 turnOnJudgment();
             }
-
-
         });
         createNewGrasfield.addActionListener(new ActionListener() {//todo
             @Override
@@ -40,6 +36,32 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
             }
         });
 
+        getInformation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Object object =judgeAnimal.getSelectedItem();
+                if(object instanceof Animal)
+                    new AnimalJudgementPanel((Animal) object);
+            }
+        });
+
+/*
+        judgeAnimal.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent itemEvent) {
+                if(itemEvent.getItem() instanceof Animal)
+                    new DetailsPanel((Animal) itemEvent.getItem());
+            }
+        });
+*/
+
+/*        int index = carList.getSelectedIndex();
+        System.out.println(index);
+        Car selectedCar;
+        if(index < simulation.map.carList.size()) selectedCar = simulation.map.carList.get(index);
+        else selectedCar = simulation.map.deadCarList.get(index-simulation.map.carList.size());
+        CarInformationFrame newFrame = new CarInformationFrame(selectedCar);
+        */
     //LAYOUT CONFIGURATION
         setLayout(new GridBagLayout());
         setVisible(true);
@@ -60,7 +82,10 @@ public class ButtonPanel extends JButton { //DISPLAYS BUTTONS ON MAIN FRAME
         gc.gridy = 0;
         add(getMeanStatistics,gc);
 
-        gc.gridx = 3;
+        gc.gridx =3;
+        add(getInformation, gc);
+
+        gc.gridx = 4;
         add(judgeAnimal,gc);
         judgeAnimal.setVisible(false);
     }

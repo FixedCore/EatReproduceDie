@@ -15,9 +15,10 @@ public class Multiversum {
     }
 
 
-    public void createNewWorld() throws InterruptedException {
+    public AbstractWorldMap createNewWorld() throws InterruptedException {
         AbstractWorldMap world = new AbstractWorldMap(dailyGrassNumber, boundary, this);
         world.theBeginOfTime();
+        return world;
     }
 
     public int getDailyGrassNumber() {

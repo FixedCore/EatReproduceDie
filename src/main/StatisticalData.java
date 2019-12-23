@@ -1,6 +1,7 @@
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 class StatisticalData {
@@ -15,12 +16,24 @@ class StatisticalData {
         this.map = map;
 
     }
+
+//DAILY STATISTICAL DATA
+    void actualiseStatistics(){
+        countGrass();
+        countAnimals();
+        meanEnergyAndMeanChildren();
+        meanLifespan();
+
+    }
+
     String dominatingGene(){
         Map<String, Integer> genes = new HashMap<>();
         for (Animal animal : map.getListOfAnimals()) {
             String string = animal.getGenome().toString();
-            if(!genes.containsKey(string)) genes.put(string, 1);
-            else genes.put(string, 1 + genes.remove(string));
+            if(!genes.containsKey(string))
+                genes.put(string, 1);
+            else
+                genes.put(string, 1 + genes.remove(string));
         }
         Integer max = 0;
         String dominatingGene = null;
@@ -32,6 +45,7 @@ class StatisticalData {
         }
         return  dominatingGene;
     }
+
     void meanEnergyAndMeanChildren(){
         int meanEnergy = 0;
         int meanChildrenNumber = 0;
@@ -49,26 +63,23 @@ class StatisticalData {
     void countAnimals(){
         animalNumber = map.getListOfAnimals().size();
     }
+
     void countGrass(){
        grassNumber = map.getGrassNumber();
     }
 
-    int countOffspring(Animal animal){
-        HashSet<Animal> counted = new HashSet<>();
-        countOffspringInnerFunction(animal, counted);
-        return counted.size();
-    }
-    private void countOffspringInnerFunction(Animal animal, HashSet<Animal> counted){
-        for(Animal offspring : animal.getOffspring()){
-            counted.add(offspring);
-            countOffspringInnerFunction(offspring, counted);
-        }
-    }
     public String toString(){
+        actualiseStatistics();
         return String.format("Total_animal:%d " ,animalNumber).concat(String.format("Total_grass:%d ", grassNumber)).
                 concat(String.format("Dominating_gene:%s ", dominatingGene())).concat(String.format("Mean_energy:%d ", meanEnergy)).
                 concat(String.format("Mean_lifespan:%d ", meanLifespan)).concat(String.format("Mean_childern_number:%d ",meanChildrenNumber));
     }
+//ADVANCED STATISTICAL DATA
+    int countAllAnimals(){
+        int a =1;
+        return a;
+    }
+
 
     public void exportStatisticalData(){
     try {
@@ -78,7 +89,7 @@ class StatisticalData {
         PrintWriter pw = new PrintWriter(statisticalData);
         //todo calculate means
 
-        pw.println(String.format(""));
+
         pw.close();
         /*PrintStream statisticalData = System.out;
         PrintStream fileOut = new PrintStream("./out.txt");

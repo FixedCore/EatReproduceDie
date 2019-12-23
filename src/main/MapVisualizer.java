@@ -6,7 +6,7 @@
          */
     public class MapVisualizer {
         private static final String EMPTY_CELL = "___";
-        private static final String FRAME_SEGMENT = "-";
+        private static final String FRAME_SEGMENT = "—";
         private static final String CELL_SEGMENT = "|";
         private IWorldMap map;
 

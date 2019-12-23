@@ -36,14 +36,14 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
             dayCounter++;
             if (isRunning) day();
             else while (!isRunning) Thread.sleep(200);
-            Thread.sleep(1000);
+            Thread.sleep(800);
         }
     }
 
     void day(){
         movementTime();
         eatingTime();
-        //breedingTime();
+        breedingTime();
         decayCorpses();
         placeGrass();
         String string = this.toString();
@@ -159,7 +159,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         Optional<AbstractWorldObject> matingPartner = hereAre.stream()
                 .filter(object ->  object instanceof Animal).
                 min(comparator);
-                    //    min((comparator)); //todo
         return (Animal) matingPartner.orElse(null);
     }
     private boolean isPartnerHere(Vector2d position){
@@ -226,7 +225,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
         if(oldPosition != null){
-            //newPosition = boundary.keepInsideBoundaries(newPosition);
             map.remove(oldPosition, animal);
             map.put(newPosition, animal);
         }

@@ -7,19 +7,18 @@ public class World {
             Vector2d jungleLowerLeft = new Vector2d(10,10);
             Vector2d jungleUpperRight = new Vector2d(20,20);
                 //CREATURES
-            int startAnimalNumber = 50;
-            int startEnegry = 400;
-            int grassNumber = 30;
+            int startAnimalNumber = 10;
+            int startEnegry =100;
+            int grassNumber = 2; //Best works with even numbers
                 //BASIC PARAMETERS
-            int parousiaDay =600;
+            int parousiaDay =20000;
                 //CREATION
             Boundary boundary = new Boundary(upperRight,jungleLowerLeft,jungleUpperRight);
             Multiversum grassField = new Multiversum(grassNumber, parousiaDay, boundary,
                     startAnimalNumber, startEnegry) {
             };
-            grassField.createNewWorld();
-            //MainFrame mainFrame = new MainFrame();
-            //System.out.println(grassField.toString());/
+            AbstractWorldMap w1 = grassField.createNewWorld();
+            //AbstractWorldMap w2 = grassField.createNewWorld();
         } catch(IllegalArgumentException | IllegalStateException | InterruptedException ex) {
             System.out.println("There is an interesting message for you.");
             System.out.println(ex);

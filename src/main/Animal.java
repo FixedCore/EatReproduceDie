@@ -5,10 +5,10 @@ public class Animal extends AbstractWorldObject {
     private MapDirection dir;
     private Set<IPositionChangeObserver> observerSet;
     private  int energy;
-    private  int childrenNumber = 0;
     private ArrayList<Animal> offspring = new ArrayList<>();
     private  Genome genome;
     private  int age;
+    private  int birthDate;
     private  AbstractWorldMap map;
 
     Animal(Vector2d initialPosition, int energy, Animal parent1, Animal parent2, AbstractWorldMap map){
@@ -19,6 +19,7 @@ public class Animal extends AbstractWorldObject {
         this.genome = new Genome(parent1, parent2);
         this.age = 0;
         this.map = map;
+        this.birthDate = map.getDayCounter();
     }
 
 
@@ -27,7 +28,7 @@ public class Animal extends AbstractWorldObject {
         if(this == matingPartner) return; //todo brzydki kod
         if(this.getAge() < 5 && matingPartner.getAge() < 5) return;
         //if(this.getEnergy()< || matingPartner.getEnergy()< ) //todo stat energy
-        childrenNumber++;
+        //childrenNumber++;
         int childEnergy = (int) ((this.getEnergy() + matingPartner.getEnergy())/4);//why cast to int?? todo
         Animal child = new Animal(this.position, childEnergy, this, matingPartner, map);
         child.positionChanged(null, child.getPosition());
@@ -77,14 +78,36 @@ public class Animal extends AbstractWorldObject {
             observer.positionChanged(oldPosition, newPosition, this);
 
         }
-    public int getEnergy() {
-        return energy;
-    }
-
-
 
     public boolean sameEnergy(Animal competitor){
         return (java.lang.Math.abs(this.getEnergy() - competitor.getEnergy()) < 0.1);
+    }
+//STATISTICAL INFORMATION
+    int countChildrenTillDay(int day){
+        int counter = 0;
+        for (Animal offspring : this.getOffspring()) {
+            if(offspring.getBirthDate() >= day) counter++;
+        }
+        return counter;
+    }
+
+    int countOffspringTillDay(int day){
+        HashSet<Animal> counted = new HashSet<>();
+        countOffspringInnerFunction(this, counted, day);
+        return counted.size();
+    }
+    private void countOffspringInnerFunction(Animal animal, HashSet<Animal> counted, int day){
+        for(Animal offspring : animal.getOffspring()){
+            if(offspring.getBirthDate() >=  day) {
+                counted.add(offspring);
+                countOffspringInnerFunction(offspring, counted, day);
+            }
+        }
+    }
+
+ //GETTERS
+    public int getEnergy() {
+        return energy;
     }
 
     public Genome getGenome() {
@@ -100,8 +123,20 @@ public class Animal extends AbstractWorldObject {
     }
 
     public int getChildrenNumber() {
-        return childrenNumber;
+        return offspring.size();
     }
 
+    public int getDeathDay(){
+        if(age+birthDate == map.getDayCounter()) return -1;
+        return age+birthDate;
+    }
+
+    public int getCurrentYear() {
+        return age+birthDate;
+    }
+
+    public int getBirthDate() {
+        return birthDate;
+    }
 }
 
