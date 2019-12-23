@@ -71,7 +71,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     void day(){
         movementTime();
         eatingTime();
-        breedingTime();
+        //breedingTime();
         decayCorpses();
         placeGrass();
         String string = this.toString();
@@ -109,24 +109,29 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         }
     }
     void placeGrass(){//JUNGLE AND SAVANNA TODO CODE CLEAN UP!
-        //IN SAVANNA
-        for(int i = 0; i < grassNumber/2; i++) {
+        //        //IN SAVANNA
+        for(int i = 0; i < multiversum.getDailyGrassNumber()/2; i++) {
             Vector2d tmp = boundary.randomPositionSavanna();
-            Optional<Grass> grassOnPosition = getGrass(tmp);
-            if(grassOnPosition.isEmpty()) {
-                Grass grass = new Grass(tmp);
-                place(grass);
-                grassNumber++;
+            Optional<Grass> grassOnPosition = getGrassFromPosition(tmp);
+            if(!isAnimalHere(tmp)) {
+                if (grassOnPosition.isEmpty()) {
+                    Grass grass = new Grass(tmp);
+                    place(grass);
+                    grassNumber++;
+                } else grassOnPosition.get().increaseEnergy(6);
             }
-            else grassOnPosition.get().increaseEnergy(6);
         }
         //IN JUNGLE
-        for(int i = 0; i < grassNumber/2; i++){
+        for(int i = 0; i < multiversum.getDailyGrassNumber()/2; i++){
             Vector2d tmp = boundary.randomPositionJungle();
-            if(!map.containsKey(tmp)) {
-                Grass grass = new Grass(tmp);
-                map.put(tmp, grass);
-                grassNumber++;
+            Optional<Grass> grassOnPosition = getGrassFromPosition(tmp);
+            if(!isAnimalHere(tmp)){
+                if(grassOnPosition.isEmpty()) {
+                    Grass grass = new Grass(tmp);
+                    map.put(tmp, grass);
+                    grassNumber++;
+                }
+                else grassOnPosition.get().increaseEnergy(6);
             }
         }
     }
@@ -215,7 +220,12 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         return  strongest;
 
     }
-    private Optional<Grass> getGrass(Vector2d tmp) {
+    private boolean isAnimalHere(Vector2d position){
+        Collection<AbstractWorldObject> hereAre = map.get(position);
+        return hereAre.stream().anyMatch(object -> object instanceof Animal);
+    }
+
+    private Optional<Grass> getGrassFromPosition(Vector2d tmp) {
         return map.get(tmp).stream().filter(object -> object instanceof Grass).map(Grass.class::cast).findAny();
     }
 
