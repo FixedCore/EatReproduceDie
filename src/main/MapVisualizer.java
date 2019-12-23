@@ -85,7 +85,9 @@ import com.google.common.collect.Multimap;
             result= result.replace("[", "" );
             if (result.isEmpty()) result = EMPTY_CELL;
             while(result.length() < 3)  result = " ".concat(result);
-            if(result.length() > 5)  result = " # ";
+            if(result.length() > 5)
+                if(result.contains("*")) result = " / ";
+                else result = " # ";
             return result;
         }
     }

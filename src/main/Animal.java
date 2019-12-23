@@ -31,7 +31,8 @@ public class Animal extends AbstractWorldObject {
         //childrenNumber++;
         int childEnergy = (int) ((this.getEnergy() + matingPartner.getEnergy())/4);//why cast to int?? todo
         Animal child = new Animal(this.position, childEnergy, this, matingPartner, map);
-        child.positionChanged(null, child.getPosition());
+        map.place(child);
+        //child.positionChanged(null, child.getPosition());
         this.afterMatingExhaustion(); this.rememberOffspring(child);
         matingPartner.afterMatingExhaustion(); matingPartner.rememberOffspring(child);
     }

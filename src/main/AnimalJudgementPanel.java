@@ -13,7 +13,10 @@ public class AnimalJudgementPanel extends JFrame { //SHOWS FRAME FOR ANIMAL JUDG
     AnimalJudgementPanel(Animal animal){
         this.animal = animal;
     //BASIC INFORMATION SETUP
-        String tmp = animal.getDeathDay() > 0 ?  "Still bothered" : String.valueOf(animal.getDeathDay());
+        String tmp=null;
+        if(animal.getDeathDay() < 0)  tmp = "Still bothered";
+        else tmp = String.valueOf(animal.getDeathDay());
+        //String tmp = animal.getDeathDay() > 0 ?  "Still bothered" : String.valueOf(animal.getDeathDay());
         this.aniamalGenome.setText("Genome: ".concat(animal.getGenome().toString()).
                 concat(" Eternal happy since: ").concat(tmp));
         days.setText("Judge till day: ");

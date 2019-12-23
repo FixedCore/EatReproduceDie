@@ -41,11 +41,11 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     }
 
     void day(){
+        placeGrass();
         movementTime();
         eatingTime();
         breedingTime();
         decayCorpses();
-        placeGrass();
         String string = this.toString();
         try {
             Layout.changeText(string);
