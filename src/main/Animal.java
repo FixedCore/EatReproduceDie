@@ -9,14 +9,16 @@ public class Animal extends AbstractWorldObject {
     private ArrayList<Animal> offspring = new ArrayList<>();
     private  Genome genome;
     private  int age;
+    private  AbstractWorldMap map;
 
-    Animal(Vector2d initialPosition, int energy, Animal parent1, Animal parent2){
+    Animal(Vector2d initialPosition, int energy, Animal parent1, Animal parent2, AbstractWorldMap map){
         super(initialPosition);
         this.dir = MapDirection.randomDirection();
         this.observerSet = new HashSet<>();
         this.energy = energy;
         this.genome = new Genome(parent1, parent2);
         this.age = 0;
+        this.map = map;
     }
 
 
@@ -27,7 +29,7 @@ public class Animal extends AbstractWorldObject {
         //if(this.getEnergy()< || matingPartner.getEnergy()< ) //todo stat energy
         childrenNumber++;
         int childEnergy = (int) ((this.getEnergy() + matingPartner.getEnergy())/4);//why cast to int?? todo
-        Animal child = new Animal(this.position, childEnergy, this, matingPartner);
+        Animal child = new Animal(this.position, childEnergy, this, matingPartner, map);
         child.positionChanged(null, child.getPosition());
         this.afterMatingExhaustion(); this.rememberOffspring(child);
         matingPartner.afterMatingExhaustion(); matingPartner.rememberOffspring(child);
@@ -51,6 +53,7 @@ public class Animal extends AbstractWorldObject {
         this.randomRotate();
         Vector2d oldPosition = position;
         position = position.add(this.dir.toUnitVector());
+        position = map.boundary.keepInsideBoundaries(position);
         positionChanged(oldPosition,position);
     }
 
@@ -99,5 +102,6 @@ public class Animal extends AbstractWorldObject {
     public int getChildrenNumber() {
         return childrenNumber;
     }
+
 }
 

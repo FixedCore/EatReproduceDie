@@ -30,10 +30,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
 
     }
 
-    public void bendTime(){
-        isRunning = !isRunning;
-    }
-
+//SIMULATION RUNING
     public void theBeginOfTime() throws InterruptedException {
         for(int i = 0; i<multiversum.getParousiaDay(); i++) {
             dayCounter++;
@@ -42,31 +39,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
             Thread.sleep(1000);
         }
     }
-    @Override
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
-        if(oldPosition != null){
-            newPosition = boundary.keepInsideBoundaries(newPosition);
-            map.remove(oldPosition, animal);
-            map.put(newPosition, animal);
-        }
-        else map.put(newPosition,animal);
-    }
-
-    public boolean place(AbstractWorldObject object) throws IllegalArgumentException {
-        if(canMoveTo(object.getPosition())) {
-            map.put(object.getPosition(), object);
-            if(object instanceof Animal) {
-                listOfAnimals.add((Animal) object);
-                ((Animal) object).addObserver(this);
-            }
-            return true;
-        }
-        else {
-            throw new IllegalArgumentException("trying to place object at: " + object.getPosition() + ". Position is already occupied by an animal.");
-        }
-
-    }
-
 
     void day(){
         movementTime();
@@ -101,15 +73,8 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
 
        if(listOfAnimals.isEmpty()) throw new IllegalStateException("All animals became extinct before your arrival Lord.");
     }
-    void initialAnimalPlacement(int startAnimalNumber) {
-        for(int i = 0; i < startAnimalNumber; i++) {
-            Vector2d tmp = boundary.randomPosition();
-            Animal animal = new Animal(tmp, multiversum.getStartEnergy(), null, null);
-            place(animal);
-        }
-    }
     void placeGrass(){//JUNGLE AND SAVANNA TODO CODE CLEAN UP!
-        //        //IN SAVANNA
+        //IN SAVANNA
         for(int i = 0; i < multiversum.getDailyGrassNumber()/2; i++) {
             Vector2d tmp = boundary.randomPositionSavanna();
             Optional<Grass> grassOnPosition = getGrassFromPosition(tmp);
@@ -135,8 +100,6 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
             }
         }
     }
-
-
 
     private void movementTime() {
         for (Animal animal : listOfAnimals) {
@@ -206,8 +169,30 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
     private Comparator<AbstractWorldObject> comparator = Comparator.comparing(o ->
                  ((Animal) o).getEnergy()
     ); //WHY it works?
+//PLACEMENT
+    void initialAnimalPlacement(int startAnimalNumber) {
+        for(int i = 0; i < startAnimalNumber; i++) {
+            Vector2d tmp = boundary.randomPosition();
+            Animal animal = new Animal(tmp, multiversum.getStartEnergy(), null, null, this);
+            place(animal);
+        }
+    }
+    public boolean place(AbstractWorldObject object) throws IllegalArgumentException {
+        if(canMoveTo(object.getPosition())) {
+            map.put(object.getPosition(), object);
+            if(object instanceof Animal) {
+                listOfAnimals.add((Animal) object);
+                ((Animal) object).addObserver(this);
+            }
+            return true;
+        }
+        else {
+            throw new IllegalArgumentException("trying to place object at: " + object.getPosition() + ". Position is already occupied by an animal.");
+        }
 
-//USEFUL METHODS
+    }
+
+//OTHER METHODS
     public Animal theStrongest(Vector2d position){
         Collection<AbstractWorldObject> positionList = map.get(position);
         Animal strongest = (Animal) positionList.stream().filter(object -> object instanceof Animal).findAny().get();//Can I do I better? 2todo
@@ -220,6 +205,7 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         return  strongest;
 
     }
+
     private boolean isAnimalHere(Vector2d position){
         Collection<AbstractWorldObject> hereAre = map.get(position);
         return hereAre.stream().anyMatch(object -> object instanceof Animal);
@@ -233,6 +219,19 @@ public class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
         return map.get(position);
     }
 
+    public void bendTime(){
+        isRunning = !isRunning;
+    }
+
+    @Override
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
+        if(oldPosition != null){
+            //newPosition = boundary.keepInsideBoundaries(newPosition);
+            map.remove(oldPosition, animal);
+            map.put(newPosition, animal);
+        }
+        else map.put(newPosition,animal);
+    }
 
     public boolean canMoveTo(Vector2d position) {
         return true;
